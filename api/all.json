@@ -19,6 +19,10 @@
         {
             "path": "articles/practise.md",
             "title": "关于编程，你的练习是不是有效的"
+        },
+        {
+            "path": "articles/javascript-iot.md",
+            "title": "JavaScript在物联网中的应用"
         }
     ],
     "source": "http://articles.phodal.com/"
