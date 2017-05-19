@@ -1,0 +1,29 @@
+{
+    "content": [
+        {
+            "path": "articles/javascript.md",
+            "title": "最流行的编程语言JavaScript能做什么"
+        },
+        {
+            "path": "articles/growth-trending.md",
+            "title": "我的GitHub PR故事，以及我向往的开源"
+        },
+        {
+            "path": "articles/read-os-software.md",
+            "title": "如何以“正确的姿势”阅读开源软件代码"
+        },
+        {
+            "path": "articles/it-books.md",
+            "title": "关于IT书籍，你应该知道的五件事"
+        },
+        {
+            "path": "articles/practise.md",
+            "title": "关于编程，你的练习是不是有效的"
+        },
+        {
+            "path": "articles/javascript-iot.md",
+            "title": "JavaScript在物联网中的应用"
+        }
+    ],
+    "source": "http://articles.phodal.com/"
+}
