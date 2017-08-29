@@ -319,11 +319,6 @@ User Filtering: https://github.com/fcurella/django-recommends
 
 http://blog.untrod.com/2016/06/simple-similar-products-recommendation-engine-in-python.html
 
-
-收集用户数据：用户事件
----
-
-
 协同过滤
 ---
 
