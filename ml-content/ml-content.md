@@ -13,9 +13,9 @@
 对于推荐系统系统来说，目前采用的主要方式是：
 
  - 基于内容推荐：内容之间的相似度，如文章的标签、电影的属性、书籍的分类。
- - 协同过滤（待实现）：用户之间的相似度，如喜欢看科幻片的 A、B 用户，A 喜欢看的 c 电影，B 也可能喜欢。
+ - 协同过滤（待实现）：用户之间的相似度，如喜欢看科幻片的 A、B 用户、并且都看过 a 电影，A 喜欢看的 c 电影，B 也可能喜欢 c 电影。
 
-要实现这两种方式有一个前提是，拥有的数据。特别是协同过滤，需要有**大量的用户行为数据**。对于一些大的社交应用、有大量的用户，如微信来说，还会有：
+要实现这两种方式有一个前提是，用户数据。特别是协同过滤，需要有**大量的用户行为数据**。对于一些大的社交应用、有大量的用户，如微信来说，还会有：
 
  - 基于社区推荐，如，你的好友喜欢什么，就会为你推荐王者荣耀。
  - 基于人口统计学，即我们网上看到的各种区域性人的偏好，各种地域黑~。
@@ -31,15 +31,53 @@
 
 这种成知识体系的文章，往往对于用户来说，更具备价值。
 
-那么，现在先让我们从收集用户数据开始。
-
-基于统计学：访问量推荐
+收集用户数据（一）：统计
 ---
 
+那么，现在先让我们从收集用户数据谈起。
 
+因为不论是哪一种推荐方式，其都依赖于应用服务提供者所拥有的**数据**、**数据**、**数据**。没有数据，你所谈的算法都是在耍流氓，你所学的机器学习、深度学习算法也是在而流氓，只谈算法不谈收集数据都是在耍流氓。他们的学习成本都很低，几星期几个月，差不多能学好七八十。可是要是没有 ImageNet 的图片数据、CNN 的上亿条新闻数据，这一些算法都没有价值。
 
- - 博客的访问量
- - 用户的点评数据
+而如我在《全栈应用开发：精益实践》所写，数据分析应该在我们上线了第一个 DEMO 之后，或第一个正式版就必须上线的功能，以实现产品的精益化。
+
+![精益环路](lean.png)
+
+它只是数据分析的第一步，引入一些数据分析的工具——只需要引入 Google Analytics、又或者 Piwik 这样的工具，就可以轻松地帮我们做数据统计。这些功夫，基本上只需要半天就做完了。这时，当我们谈及收集用户数据的时候：
+
+ - 对于技术人员来说，无非就是用户的地域、浏览器、操作系统等等，这些相关的信息会影响到用户的体验、技术决策等等。
+ - 对于业务人员来说，他们可以了解某个产品的浏览量、受欢迎程度、爱欢迎的区域等等。
+
+只是这些数据，并不能帮我们做出一个优秀的推荐系统。这时，我们是基于统计学，只能统计出哪些产品受用户欢迎：
+
+![事件追踪](ga-events.jpg)
+
+但是，这已经可以实现我们的第一个推荐系统。
+
+（PS：另外一部分用户数据收集，见下文）
+
+基于统计学：访问量及评论数推荐
+---
+
+我过去一直觉得，依据统计博客、文章的访问量来推荐是不可靠的。
+
+ - 一篇文章可能因为观点受争议，如 『PHP 不再是最好的语言』，而着有极高的访问量。可这个时候，用户往往是通过标题和摘要来理解作者的观点，往往就会轻易地下定论。又有一些用户，比如我则喜欢看热闹，去下面回复一个『JavaScript 是最流行的语言』。
+ - 一篇文章可能因为大 V 的流量效应，而导致 他/她/也 的每一篇文章都有极高的访问量
+ - 。。。
+
+并且使用流量统计也容易被攻击，只需要一些诸如『流量精灵』这样的软件，就可以提高文章的访问——虚假的繁荣。
+
+衡量一个社区的水平，无非就是最受欢迎文章的类型，如简书的鸡汤，知乎的故事。尽管这些并不代表着这些社区的真实水平，但是却反应了这些社区的主要受众。
+
+考虑到我过去曾经 xxx 过，我决定改进一下统计代码，即将统计代码放在 JavaScript 中，通过 Ajax 请求实现。而我在这个过程中，犯了一个严重的错误就是，忘了在前端屏蔽
+
+```
+var botPattern = "(googlebot\/|Googlebot-Mobile|Googlebot-Image|Google favicon|Mediapartners-Google|bingbot|slurp|java|wget|curl|Commons-HttpClient|Python-urllib|libwww|httpunit|nutch|phpcrawl|msnbot|jyxobot|FAST-WebCrawler|FAST Enterprise Crawler|biglotron|teoma|convera|seekbot|gigablast|exabot|ngbot|ia_archiver|GingerCrawler|webmon |httrack|webcrawler|grub.org|UsineNouvelleCrawler|antibot|netresearchserver|speedy|fluffy|bibnum.bnf|findlink|msrbot|panscient|yacybot|AISearchBot|IOI|ips-agent|tagoobot|MJ12bot|dotbot|woriobot|yanga|buzzbot|mlbot|yandexbot|purebot|Linguee Bot|Voyager|CyberPatrol|voilabot|baiduspider|citeseerxbot|spbot|twengabot|postrank|turnitinbot|scribdbot|page2rss|sitebot|linkdex|Adidxbot|blekkobot|ezooms|dotbot|Mail.RU_Bot|discobot|heritrix|findthatfile|europarchive.org|NerdByNature.Bot|sistrix crawler|ahrefsbot|Aboundex|domaincrawler|wbsearchbot|summify|ccbot|edisterbot|seznambot|ec2linkfinder|gslfbot|aihitbot|intelium_bot|facebookexternalhit|yeti|RetrevoPageAnalyzer|lb-spider|sogou|lssbot|careerbot|wotbox|wocbot|ichiro|DuckDuckBot|lssrocketcrawler|drupact|webcompanycrawler|acoonbot|openindexspider|gnam gnam spider|web-archive-net.com.bot|backlinkcrawler|coccoc|integromedb|content crawler spider|toplistbot|seokicks-robot|it2media-domain-crawler|ip-web-crawler.com|siteexplorer.info|elisabot|proximic|changedetection|blexbot|arabot|WeSEE:Search|niki-bot|CrystalSemanticsBot|rogerbot|360Spider|psbot|InterfaxScanBot|Lipperhey SEO Service|CC Metadata Scaper|g00g1e.net|GrapeshotCrawler|urlappendbot|brainobot|fr-crawler|binlar|SimpleCrawler|Livelapbot|Twitterbot|cXensebot|smtbot|bnf.fr_bot|A6-Indexer|ADmantX|Facebot|Twitterbot|OrangeBot|memorybot|AdvBot|MegaIndex|SemanticScholarBot|ltx71|nerdybot|xovibot|BUbiNG|Qwantify|archive.org_bot|Applebot|TweetmemeBot|crawler4j|findxbot|SemrushBot|yoozBot|lipperhey|y!j-asr|Domain Re-Animator Bot|AddThis)";
+var botRe = new RegExp(botPattern, 'i');
+var userAgent = navigator.userAgent;
+if (!botRe.test(userAgent)) {
+
+}
+```
 
 
 基于统计学：评分及 IMDB 加权算法推荐
@@ -69,6 +107,10 @@ def confidence(ups, downs):
     phat = float(ups) / n
     return ((phat + z*z/(2*n) - z * sqrt((phat*(1-phat)+z*z/(4*n))/n))/(1+z*z/n))
 ```
+
+### 待改进
+
+可是我给一个文章五分，并不代表我真的喜欢这篇文章。正好，我在某宝上不敢给差评一样，万一被骚扰了呢。但是我喜欢一个东西，我会给一个评论。因此，我会开心地留个言，又或者是在留言给个差评：**卖家真好，卖了个手机壳，送了个手机**。
 
 
 基于文章标签过滤
@@ -215,6 +257,10 @@ User Filtering: https://github.com/fcurella/django-recommends
 
 
 http://blog.untrod.com/2016/06/simple-similar-products-recommendation-engine-in-python.html
+
+
+收集用户数据：用户事件
+---
 
 
 协同过滤
