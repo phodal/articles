@@ -1,7 +1,7 @@
 我是如何为技术博客设计一个推荐系统
 ===
 
-过去的两周里，我一直忙于为 『[玩点什么](https://www.wandianshenme.com/)』 设计一个推荐系统（即，recommend system）。在这个过程中，参考了之前的 几本书籍，查找了一系列的资料。想着这些资料上，大部分都是大同小民的，实现了几个简单的推荐功能，改进了标签推荐算法，便想着写篇文章记录一下。
+过去的两周里，我一直忙于为 『[玩点什么](https://www.wandianshenme.com/)』 设计一个推荐系统（即，recommend system）。在这个过程中，参考了之前的 几本书籍，查找了一系列的资料。想着这些资料上，大部分都是大同小异的，实现了几个简单的推荐功能，改进了标签推荐算法，便想着写篇文章记录一下。
 
 『[玩点什么](https://www.wandianshenme.com/)』，是一个基于 Django、Python 的 CMS 系统（Mezzanine）。是的，和我的博客使用的是同一个 CMS 系统。由于使用的是 Python 语言，因此对于机器学习具有天生的优势。
 
@@ -102,39 +102,20 @@ if (!botRe.test(userAgent)) {
 基于统计学：评分及 IMDB 加权算法推荐
 ---
 
+软件开发，本身是以演进的形式进行的。不论，我们是开发基于内容的推荐系统，还是协同过滤的系统，它都依赖于我们拥有一个评分系统。与此同时，如果我们没有足够的用户，我们也进行不了内容推荐和协同过滤，因此设计一个稍微完善一点的评价排名，便显得很有必要。
+
+下图是『[玩点什么](https://www.wandianshenme.com/)』的评分，用户不需要登录就可以评分：
+
 ![玩点什么评分示例](play-rating-example.jpg)
 
-https://www.biaodianfu.com/imdb-rank.html
+尽管没有登录是一个风险问题，然而对于一个内容网站来说，刷评价的意义并不大。
 
-贝叶斯统计的算法得出的加权分(Weighted Rank-WR)，公式如下：
+在真实应用的过程中，遇到了一个问题：
 
- WR， 加权得分（weighted rating）。
- R，该电影的用户投票的平均得分（Rating）。
- v，该电影的投票人数（votes）。
- m，排名前 250 名的电影的最低投票数（现在为 3000）。
- C， 所有电影的平均得分（现在为6.9）。
- 
-```
-from math import sqrt
+ - A 文章只有 5 个评分，且都是 5 分；
+ - B 文章则有 100 个评分，平均值则是 4.8 分；
 
-def confidence(ups, downs):
-    n = ups + downs
-
-    if n == 0:
-        return 0
-
-    z = 1.0 #1.44 = 85%, 1.96 = 95%
-    phat = float(ups) / n
-    return ((phat + z*z/(2*n) - z * sqrt((phat*(1-phat)+z*z/(4*n))/n))/(1+z*z/n))
-```
-
-### 待改进
-
-可是我给一个文章五分，并不代表我真的喜欢这篇文章。正好，我在某宝上不敢给差评一样，万一被骚扰了呢。但是我喜欢一个东西，我会给一个评论。因此，我会开心地留个言，又或者是在留言给个差评：**卖家真好，卖了个手机壳，送了个手机**。
-
-
-基于文章标签过滤
----
+如下表示：
 
 id  | xx | keywords | votes | rating_sum | rating_average | published | title
 ----|----|----------|-------|------------|----------------|-----------|-------
@@ -149,6 +130,66 @@ id  | xx | keywords | votes | rating_sum | rating_average | published | title
 "512 " | "0 " | " " | "9 " | "36 " | "4.0 " | "1 " | "如何通过github提升自己"
 "508 " | "0 " | "emacs vim github " | "8 " | "40 " | "5.0 " | "1 " | "努力只是因为想去做想做的事"
 "548 " | "0 " | "full stack mustache django rework " | "8 " | "35 " | "4.375 " | "1 " | "全栈工程师的思考"
+
+
+这个时候，我们很难判定 A 就比 B 好，于是在知乎上看到了一个相关的评分算法，即（更多信息可以阅读：[IMDB 给出的电影评分的计算方法是怎样的？](https://www.zhihu.com/question/19746144)），又可以称为 IMDB TOP 250 评分算法。
+
+它是由贝叶斯统计的算法得出的加权分（Weighted Rank-WR），其公式如下：
+
+```
+(WR) = (v ÷ (v+m)) × R + (m ÷ (v+m)) × C
+```
+
+ - WR， 加权得分（weighted rating）。
+ - R，  该电影的用户投票的平均得分（Rating）。
+ - v，  该电影的投票人数（votes）。
+ - m，  排名前 250 名的电影的最低投票数（现在为 3000）。
+ - C，  所有电影的平均得分（现在为6.9）。
+
+于是，我的算法代码就变成了这样：
+ 
+```
+def imdb_rank(average_rating, votes_number):
+    minimum_votes = settings.MINIMUM_VOTES
+    correctly_votes_rate = settings.CORRECTLY_VOTES_RATE
+
+    return (votes_number / (votes_number + minimum_votes)) * average_rating + (minimum_votes / (
+    votes_number + minimum_votes)) * correctly_votes_rate
+```
+
+然而，在计算排序的时候，我不是拿所有的文章排序，而是：
+
+ 1. 从所有文章中过滤出能达到最小评分数的文章
+ 2. 按评分值，对这些文章进行排序，取前 10
+ 3. 对前 10 中的这些文章，进行 imdb_rank 计算，取前 3
+
+这样做的主要原因是，出于服务器性能考虑。
+
+对于那些只有赞同和反对的网站来说，可以采用『威尔逊区间』算法，表示如下：
+
+```
+from math import sqrt
+
+def confidence(ups, downs):
+    n = ups + downs
+
+    if n == 0:
+        return 0
+
+    z = 1.0 #1.44 = 85%, 1.96 = 95%
+    phat = float(ups) / n
+    return ((phat + z*z/(2*n) - z * sqrt((phat*(1-phat)+z*z/(4*n))/n))/(1+z*z/n))
+```    
+
+### 待改进
+
+可是我给一个文章五分，并不代表我真的喜欢这篇文章。正如，我在某宝上不敢给差评一样，万一被骚扰了呢。但是我喜欢一个东西，我会给一个评论。因此，我会开心地留个言，又或者是在留言给个差评：**卖家真好，卖了个手机壳，送了个手机**。
+
+因此，目前行业内有一些做法是，评分 + 评论分析，从评论中分析出用户的真实想法。
+
+基于文章标签过滤
+---
+
 
 1. 获取文章的所有标签
 2. 对所有文章的标签进行统计，计数
@@ -175,7 +216,7 @@ if first_keyword:
         return []
 ```                
 
-https://stackoverflow.com/questions/10029588/python-implementation-of-the-wilson-score-interval
+
 
 添加基于 Google 搜索的标签权重
 ---
