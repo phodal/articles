@@ -1,4 +1,4 @@
-技术博客及内容站点的推荐系统设计
+我是如何为技术博客设计一个推荐系统
 ===
 
 过去的两周里，我一直忙于为 『[玩点什么](https://www.wandianshenme.com/)』 设计一个推荐系统（即，recommend system）。在这个过程中，参考了之前的 几本书籍，查找了一系列的资料。想着这些资料上，大部分都是大同小民的，实现了几个简单的推荐功能，改进了标签推荐算法，便想着写篇文章记录一下。
@@ -66,12 +66,20 @@
 
 并且使用流量统计也容易被攻击，只需要一些诸如『流量精灵』这样的软件，就可以提高文章的访问——虚假的繁荣。
 
-衡量一个社区的水平，无非就是最受欢迎文章的类型，如简书的鸡汤，知乎的故事。尽管这些并不代表着这些社区的真实水平，但是却反应了这些社区的主要受众。
+一般来说，大部分的社区都会将流量大的内容、话题等，放在首页显眼的位置。从这个推荐的位置，我们就可以知道这个社区的『水平』。衡量一个社区的『水平』，无非就是最受欢迎文章的类型，如简书的鸡汤，知乎的故事。但是，这些并不代表着这些社区的真实水平，却反应了这些社区的主要受众。
 
-考虑到我过去曾经 xxx 过，我决定改进一下统计代码，即将统计代码放在 JavaScript 中，通过 Ajax 请求实现。而我在这个过程中，犯了一个严重的错误就是，忘了在前端屏蔽
+![简书示例](jianshu-example.jpg)
+
+好在简书是编辑推荐制，但章的质量还是『有一定』保证的，但是文章的性质改不了鸡汤。
+
+考虑到我过去曾经刷过访问量，以及流量统计对于数据库性能的影响，我决定改进一下统计代码，即将统计代码放在 JavaScript 中，通过 Ajax 请求实现。而我在这个过程中，犯了一个严重的错误就是，忘了在前端屏蔽中的爬虫。我虽然在 Nginx 里，直接过滤了一部分的爬虫，但是诸如 Google、百度、Bing 都是允许的，而 Google bot 则会在页面上执行 JavaScript，因此每篇博客都被刷了好多阅读量。
+
+![Google 爬虫数据](google-bot-example.jpg)
+
+于是，只好在前端做一些相关的处理。
 
 ```
-var botPattern = "(googlebot\/|Googlebot-Mobile|Googlebot-Image|Google favicon|Mediapartners-Google|bingbot|slurp|java|wget|curl|Commons-HttpClient|Python-urllib|libwww|httpunit|nutch|phpcrawl|msnbot|jyxobot|FAST-WebCrawler|FAST Enterprise Crawler|biglotron|teoma|convera|seekbot|gigablast|exabot|ngbot|ia_archiver|GingerCrawler|webmon |httrack|webcrawler|grub.org|UsineNouvelleCrawler|antibot|netresearchserver|speedy|fluffy|bibnum.bnf|findlink|msrbot|panscient|yacybot|AISearchBot|IOI|ips-agent|tagoobot|MJ12bot|dotbot|woriobot|yanga|buzzbot|mlbot|yandexbot|purebot|Linguee Bot|Voyager|CyberPatrol|voilabot|baiduspider|citeseerxbot|spbot|twengabot|postrank|turnitinbot|scribdbot|page2rss|sitebot|linkdex|Adidxbot|blekkobot|ezooms|dotbot|Mail.RU_Bot|discobot|heritrix|findthatfile|europarchive.org|NerdByNature.Bot|sistrix crawler|ahrefsbot|Aboundex|domaincrawler|wbsearchbot|summify|ccbot|edisterbot|seznambot|ec2linkfinder|gslfbot|aihitbot|intelium_bot|facebookexternalhit|yeti|RetrevoPageAnalyzer|lb-spider|sogou|lssbot|careerbot|wotbox|wocbot|ichiro|DuckDuckBot|lssrocketcrawler|drupact|webcompanycrawler|acoonbot|openindexspider|gnam gnam spider|web-archive-net.com.bot|backlinkcrawler|coccoc|integromedb|content crawler spider|toplistbot|seokicks-robot|it2media-domain-crawler|ip-web-crawler.com|siteexplorer.info|elisabot|proximic|changedetection|blexbot|arabot|WeSEE:Search|niki-bot|CrystalSemanticsBot|rogerbot|360Spider|psbot|InterfaxScanBot|Lipperhey SEO Service|CC Metadata Scaper|g00g1e.net|GrapeshotCrawler|urlappendbot|brainobot|fr-crawler|binlar|SimpleCrawler|Livelapbot|Twitterbot|cXensebot|smtbot|bnf.fr_bot|A6-Indexer|ADmantX|Facebot|Twitterbot|OrangeBot|memorybot|AdvBot|MegaIndex|SemanticScholarBot|ltx71|nerdybot|xovibot|BUbiNG|Qwantify|archive.org_bot|Applebot|TweetmemeBot|crawler4j|findxbot|SemrushBot|yoozBot|lipperhey|y!j-asr|Domain Re-Animator Bot|AddThis)";
+var botPattern = "(googlebot\/|Googlebot-Mobile|Googlebot-Image|Google favicon|Mediapartners-Google|bingbot...";
 var botRe = new RegExp(botPattern, 'i');
 var userAgent = navigator.userAgent;
 if (!botRe.test(userAgent)) {
@@ -79,10 +87,22 @@ if (!botRe.test(userAgent)) {
 }
 ```
 
+而除了，上面说到的鸡汤问题。它也有一些额外的好处，如：
+
+ - **长尾效应**。这种高流量的文章、商品，往往能带来长尾效应，就像亚马逊上的畅销书，畅销书本身是不赚钱的。但是网站可以通过相关的文章、产品，来获得更多的阅读及利润。而这取决于，**我们为用户推荐的相关产品，是不是真正是用户需要的**。
+
+考虑到上面的鸡汤流量问题，它可以吸引大量的人气，但是会导致劣币驱除良币的产生——大量产生优秀内容的作者，写不出受大众欢迎的文章。举个例子，技术写作来说，面向新手的文章，往往会有比较高的阅读量；而面向中高端用户的文章，则阅读量低。可要是首页都是新手文章，流量和受众就会越来越多，但是高端用户就会离开这个社区。
+
+因此，我们还可以采用用户评分，来增加一个新的榜单，如 Medium 和 『[玩点什么](https://www.wandianshenme.com/)』的第二种推荐方式。
+
+![玩点什么首页推荐](home-recommend.jpg)
+
+它可以在保证流量的同时，也不降低网站的质量。
 
 基于统计学：评分及 IMDB 加权算法推荐
 ---
 
+![玩点什么评分示例](play-rating-example.jpg)
 
 https://www.biaodianfu.com/imdb-rank.html
 
