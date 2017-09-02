@@ -220,6 +220,8 @@ def confidence(ups, downs):
 标签生成
 ---
 
+使用标签来向用户推荐产品，有几种不同的类型：
+
 这种标签生成方式有四种方式：
 
  - 手动标签
@@ -249,10 +251,10 @@ def confidence(ups, downs):
 
 相似的，如上我们提到机器在生成标签的时候，也会出现一定的问题。
 
-手动标签推荐（一）：使用标签量原型
+基于手动标签推荐：标签数量相关
 ---
 
-使用标签来向用户推荐产品，有几种不同的类型：
+由于我使用的基于 Django 的 CMS 里，已经包含了后台手动推荐相关文章的功能。因此，我的想法是，先基于某几个特定的标签的数量，来筛选中相关的文章。
 
 在我的第一个原型里
 
@@ -281,32 +283,6 @@ if first_keyword:
         return []
 ```                
 
-随后，对算法进行了改进
-
-
-半自动标签推荐（二）：基于 Google 搜索权重优化
----
-
-单一的关键词，只对于网站本身是有价值的，对于用户来说，则不是如此。
-
-基于 Google Search Console 的关键词权重，比如
-
-Queries | Clicks | Impressions | CTR | Position
---------|--------|------------|------|------
-homebridge-miio | 7 | 28 | 25% | 8.2
-home assistant broadlink | 4 | 10 | 40% | 15
-amazon echo raspberry pi | 3 | 10 | 30% | 5.0
-raspberry pi homebridge | 2 | 6 | 33.33% | 7.7
-raspberry pi alexa gpio | 2 | 4 | 50% | 10
-nodemcu homekit | 2 | 3 | 66.67% | 13
-arduino homekit | 1 | 3 | 33.33% | 9.7
-
-
-### 相关性搜索
-
-用户搜索 Raspberry Pi，那么它可能还会结合 Arduino ??
-
-### 标签权重排
 
 这也就是上面算法中的问题，假如我们的文章中，出现一系列的 home assistant、raspberry pi 相关的文章，那么它对于网站来说，表明它是没有价值的。
 
@@ -324,7 +300,62 @@ arduino homekit | 1 | 3 | 33.33% | 9.7
  - 加权计算法
 
 
-基于内容的推荐基础
+随后，对算法进行了改进
+
+
+半自动标签推荐：基于 Google 搜索权重优化
+---
+
+单一的关键词，只对于网站本身是有价值的，对于用户来说，则不是如此。
+
+在我使用 Google Analtyics 的时候，我突然想到可以通过 Google Search Console 来获取用户搜索的关键词。即：
+
+![Google 搜索结果示例](google-search-example-in-search-console.jpg)
+
+如下表所示，会在 Google Search Console 写明其相应的位置、点击率、出现次数等等的信息：
+
+Queries | Clicks | Impressions | CTR | Position
+--------|--------|------------|------|------
+homebridge-miio | 7 | 28 | 25% | 8.2
+home assistant broadlink | 4 | 10 | 40% | 15
+amazon echo raspberry pi | 3 | 10 | 30% | 5.0
+raspberry pi homebridge | 2 | 6 | 33.33% | 7.7
+raspberry pi alexa gpio | 2 | 4 | 50% | 10
+nodemcu homekit | 2 | 3 | 66.67% | 13
+arduino homekit | 1 | 3 | 33.33% | 9.7
+
+### 相关性搜索
+
+用户搜索 Raspberry Pi，那么它可能还会结合 Arduino ??
+
+![相关搜索](search-result-recommend.jpg)
+
+### 更新权重
+
+于是便下载 CSV，创建新的 model，导入到数据库中。
+
+同样的，简单做了一个权重算法：
+
+第一个关键词 = 关键词次数 * 0.25 + 关键词查询次数 * 0.75
+
+```
+    for keyword in keywords:
+        related_queries = Query.objects.filter(queries__contains=keyword.title)
+        keywords[index].item_count *= 0.75
+
+        if related_queries:
+            for query in related_queries:
+                keywords[index].item_count += query.clicks * 0.25
+
+        if index > 1 and keywords[index].item_count > keywords[index - 1].item_count:
+            top_rank_keyword = keywords[index].title
+
+        index += 1
+```
+
+第二个关键词则按频率取词。
+
+基于内容的推荐算法
 ---
 
 1. Item Representation：为每个item抽取出一些特征（也就是item的content了）来表示此item；
