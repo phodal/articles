@@ -14,6 +14,8 @@
 
 ![X5](x5.jpg)
 
+![X5](x5-2.jpg)
+
 除了正常的路由器功能，它还可以支持局域网文件共享：USB3.0 的最大传输速度为 500MB/s，是普通 USB 2.0 传输速度的 8 倍
 支持 3G/4G USB 适配器上网。
 
@@ -87,24 +89,6 @@ Login Successful
 
 上面的最后一个，IP 地址为 **172.3.34.51** 就是我的电脑分配的内部 IP。
 
-### Android 安装
-
-作为一个 “穷逼” 的 Android 用户，我下载了一个 Oray 客户端，然后登录上我的账号，就直接看到了我的网络：
-
-![Android 示例](android-example.png)
-
-为了测试外网访问，我使用的是手机流量。接着，我在我的 Mac 上运行起了一个 HTTP 服务：
-
-```
-python -m SimpleHTTPServer 8080
-```
-
-然后在手机上，访问 [172.3.34.51:8080](172.3.34.51:8080)，也就是上面的那个 IP：
-
-![Molog 界面](molog-ss.jpg)
-
-这意味着，现在我可以随意访问，**在同一个 VPN 网络内的任何服务器**，而不需要的额外配置。而整个过程中，最麻烦的事，恐怕就是登录这个账号了。
-
 ### GNU/Linux 用户
 
 这个步骤，对于 Linux 用户同样也很简单，只需要下载：
@@ -128,6 +112,40 @@ $PgyVistor
 再输入我们的账号即可。
 
 怎样，是不是很简单？
+
+### Android 安装
+
+作为一个 “穷逼” 的 Android 用户，我下载了一个 Oray 客户端，然后登录上我的账号，就直接看到了我的网络：
+
+![Android 示例](android-example.png)
+
+为了测试外网访问，我使用的是手机流量。接着，我在我的 Mac 上运行起了一个 HTTP 服务：
+
+```
+python -m SimpleHTTPServer 8080
+```
+
+然后在手机上，访问 [172.3.34.51:8080](172.3.34.51:8080)，也就是上面的那个 IP：
+
+![Molog 界面](molog-ss.jpg)
+
+这意味着，现在我可以随意访问，**在同一个 VPN 网络内的任何服务器**，而不需要的额外配置。而整个过程中，最麻烦的事，恐怕就是登录这个账号了。
+
+当然了，对于 FTP 服务来说，这也不算是事。对于 OS X El Capitan 的用户，可以直接使用如下的命令启动 FTP 服务：
+
+```
+sudo -s launchctl load -w /System/Library/LaunchDaemons/ftp.plist
+```
+
+可惜我手贱升级了，只能找别的出路了：proftpd。由于我电脑上已经安装有了 XAMPP，于是我就直接使用了这个服务。其对应的账号是 ``daemon``，密码是 ``xampp``：
+
+![FTP 服务示例](es-ss.png)
+
+再看看我再喜欢的 ElastiSearch 服务：
+
+![Elastic Search](elasticsearc.jpg)
+
+只要有了这个组网 VPN，我们就可以轻松连上企业内部的服务。
 
 小结
 ---
