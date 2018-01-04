@@ -47,9 +47,11 @@ SVG -> Vector 矢量图形
 Model 校验
 ---
 
-默认对 Model 进行校验，算是与前端的一个大的区别。为了取出一个 JSON 中的某个值，可以直接使用 Retrofit 库来转换数据，又或者用 GJSON 转换成某种对象，而在前端里，这种事情是轻而易举的。
+默认对 Model 进行校验，算是与前端的一个大的区别。为了取出一个 JSON 中的某个值，可以直接使用 Retrofit 库来转换数据，又或者用 GJSON 转换成某种对象，而在前端里，这种事情是轻而易举的，我万能的 ``JSON.parse``。
 
 因此在使用 JavaScript 编写的时候，我们通常不会对 Model 进行校验。这主要是利益于动态语言的优势。
+
+与没有对象校验的前端相比，一旦出错，根本不容易察觉。这一点，或者也是一个优势所在——当你上架了新版本的 API 时，旧的应用不会 NullPointerException。与此同时，在开发的时候，后台 API 发生变化的时候，也会导致后续的一系列 bug。
 
 而在静态语言中，要这么就反而就容易导致各种问题。
 
@@ -62,7 +64,7 @@ Model 校验
 
 怪不得 Android 的程序员喜欢上了 Kotlin：
 
-```
+```kotlin
 override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val view = inflater?.inflate(R.layout.fragment_home, container, false)
     val button: Button = view!!.findViewById(R.id.open_rn_button)
@@ -73,9 +75,9 @@ override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, save
 
 由于没有经验，我经常把 ``val`` 写成了 ``var``。
 
-这就和那些习惯写 alloc init 的 iOS 程序员，一夜间突然喜欢上了写 ES6 代码一样：
+这就和那些习惯写 alloc init 的 iOS 程序员，一夜间突然喜欢上了写 ES6 一样：
 
-```
+```swift
 let className = NSStringFromClass(MyClass)
  let classType = NSClassFromString(className) as? MyClass.Type
  if let type = classType {
@@ -83,7 +85,7 @@ let className = NSStringFromClass(MyClass)
  }
 ```
 
-哦，不对 ~~他们写的是 Swift~~
+哦，不对 他们写的是 Swift。
 
 类与面向对象
 ---
