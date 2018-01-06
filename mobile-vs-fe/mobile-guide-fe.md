@@ -28,7 +28,12 @@
 编码效率
 ---
 
-从编码效率上来说，
+从编码效率上来说，还是前端快，快得不止一点点。
+
+ - 更快的预览速度。
+ - 成熟的生态系统。
+ - 大量可用的 UI 框架及组件。
+ - 参考别家的实现。Web 前端是开放的世界，在今天来看，要实现的效果基本上已经被实现过了，所以我们可以直接参考
 
 MVP vs MV*：后天的 MV*
 ---
@@ -104,11 +109,24 @@ let className = NSStringFromClass(MyClass)
 View 与 DOM
 ---
 
-混合应用说到底还是 HTML + CSS，这些东西基本上是没有多大变化的。无非就是使用一下 Ionic 这样的框架，使 UI 看上去和原生移动应用的风格一致；与些同时，再想方设法调用一些原生的功能，来实现与原生应用一样的体验。
-
-使用 XML 切图并不是一件容易的事，
-
 还有已经有写 React Native 布局的一些经验，在写起 Android 的布局，倒也还好——没有那么坑。
+
+### 样式复用
+
+前端使用 HTML + CSS 来编写样式，而安装则只使用 XML 来切图，这并不是一件容易的事。不像 CSS 可以通过 “继承”
+ 和 “覆写” 的形式来实现样式复用。
+
+而在 Android 的布局上，这就不是一样容易的事。
+
+### 双向绑定
+
+从原生的角度来看，前端的 ``document.getElementById()`` 与 Android 的 ``findViewById`` 并没有多大的区别。
+
+不过 Android 是自带了双向的 DataBinding，而原生的前端是没有的。只是前端有前端框架，在这一点也完全不是问题。
+
+### 布局调试
+
+而当前端有了前端框架之后，就不一样了。好在 Android 有 ButterKnife 这样的 View 注入框架。
 
 ![Layout Inspector](layout_inspector.png)
 
@@ -118,10 +136,14 @@ Android 中也有类似于 JavaScript 生成 HTML 的方式，自定义模板。
 
 而 Android 则是局部页面的。
 
-SVG -> Vector 矢量图形
-
 调试
 ---
+
+记得我们在 Chrome 浏览器里可以打断点，随后在 Console 中做出一些计算。
+
+得益于 Android Studio 背后的 JetBrain 的 Evaluating Expressions，可以实时计算表达式的值。
+
+以我有限的 Objective-C 编程经验来说，XCode 也是可以做到的。
 
 通过 stetho 也可以做与 Web 相关的调试工作：
 
