@@ -1,7 +1,7 @@
-一个前端程序员的一个月原生 Android 开发体验
+一个前端程序员的一个月原生 Android 开发体验：慢
 ===
 
-> 自从我写了 Android 应用后，上知乎的时间变得更长了。
+> 一个前端程序员的一个月原生 Android 开发体验。自从我写了 Android 应用后，上知乎的时间变得更长了。
 
 自从我写了 Android 应用后，上知乎的时间变得更长了。哦，不对，你理解错了，我的意思是：编译代码、打包 APK、运行在设备上需要时间。可不像前端，一保存代码，就自动刷新页面。
 
@@ -17,9 +17,8 @@
  - MVP vs MV*：后天的 MV*
  - 静态语言 vs 动态语言
  - View 与 DOM
- - 调试
+ - 代码调试
  - 兼容性
- - 编码效率
 
 （PS：受限于我只有短暂的经验，所以有些用词可能没有那么准确。）
 
@@ -42,6 +41,10 @@
 而考虑到 Android 和 iOS 是各自实现的，那么一个混合应用的开发效率可能是远远大于 2 倍，而跨平台应用（如 React Native、Weex、NativeScript） 的开发效率会接近他们的 2 倍（原因是：集成某些功能时，需要原生代码来实现，这时工作量直接翻倍等同）。
 
 从目前的维护程度上来说，还是 Java 的代码相对维护。主要是前端领域的变化太快了，并且在软件工程上的实践不像 Java 是必需要求的，因此容易出现大量的遗留代码。只是考虑到，Java 代码的臃肿，还是改用 Kotlin 吧。
+
+![Android Studio 转 Kotlin](to-kotlin.png)
+
+只需要按下： **Command + Alt + Shift + K**，轻松当爸爸。
 
 MVP vs MV*：后天的 MV*
 ---
@@ -77,11 +80,19 @@ public class MainActivity extends AppCompatActivity implements MainView {
 静态语言 vs 动态语言
 ---
 
-自从我写了 Android 应用后，上知乎的时间变得更长了。每次我想试着在手机上查看效果的时候，得构建、编译代码、安装，大概得等上个两三钟才能运行在虚拟机或者真机上。可事件往往不会这么顺利，动不动会遇上个 ``NullPointerException``，然后应用就 Crash 了。
+自从我写了 Android 应用后，上知乎的时间变得更长了。
 
-与上面相类似的是，
+### 编译与动态运行
 
-怪不得 Android 的程序员喜欢上了 Kotlin：
+当我们编写 Web 应用的时候，只要一保存代码，网页就可以由 ``LiveReload`` 这样的工具来帮我们自动刷新。于是，在诸如 React Native 这样的跨平台框架里，也有 Live Reload 这样的特性。
+
+而当我开发 Android 应用的时候，每次我想试着在手机上查看效果的时候，得构建、编译代码、安装，大概得等上个两三钟才能运行在虚拟机或者真机上。
+
+![Android Studio Process](android-build-process.png)
+
+可事件往往不会这么顺利，动不动会遇上个 ``NullPointerException``，然后应用就 Crash 了。这个时候，就要去修复代码中的问题，加个 ``blabla!=null``，然后编译，继续 Crash。
+
+怪不得 Android 的程序员喜欢上了 Kotlin，只要一个 ``view?`` 就能判断是不是有值的事：
 
 ```kotlin
 override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -92,9 +103,7 @@ override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, save
 }
 ```
 
-由于没有经验，我经常把 ``val`` 写成了 ``var``。
-
-这就和那些习惯写 alloc init 的 iOS 程序员，一夜间突然喜欢上了写 ES6 一样：
+可由于没有经验，我经常把 ``val`` 写成了 ``var``。这就和那些习惯写 alloc init 的 iOS 程序员，一夜间突然喜欢上了写 ES6 一样：
 
 ```swift
 let className = NSStringFromClass(MyClass)
@@ -104,77 +113,114 @@ let className = NSStringFromClass(MyClass)
  }
 ```
 
-哦，不对 他们写的是 Swift。
+哦，不对他们写的是 Swift。
 
-又回到设计模式的天下，
+并且作为一个面向对象的语言，Java 天生就意味着，大量的臃肿代码。
 
-大量的代码，就意味着很容易出现重复。 
+```
+public int getId() {  
+    return id;  
+}  
+public void setId(int id) {  
+    this.id = id;  
+}  
+public String getName() {  
+    return name;  
+}  
+public void setName(String name) {  
+    this.name = name;  
+}
+```
 
-### IDE 支持 好
+大量的代码，就意味着大量的 ``bug``，一定量的重复代码，一下子又回到设计模式的天下。 
+
+### IDE 支持
+
+好在，由于 Android Studio 有强大的、良好的 Intellij 支持。在 IDE 上对语言的支持，要比 JavaScript 的**第三方库**支持友好得多：
 
 ![静态语言](static-language.png)
+
+要知道 WebStorm 或者 Intellj IDEA 专业版，它们在 JavaScript 第三方类的支持上就是坑。
 
 View 与 DOM
 ---
 
-还有已经有写 React Native 布局的一些经验，在写起 Android 的布局，倒也还好——没有那么坑。
+过去，前端在 DOM 操作上存在天然的问题，即在我们使用 ``$("*")`` 的时候，全局。当然现今的框架，在这个问题上比较少，但是考虑到仍然可能会被误用，或者注入。而 Android 则是局部页面的。
 
 ### 样式复用
 
 前端使用 HTML + CSS 来编写样式，而安装则只使用 XML 来切图，这并不是一件容易的事。不像 CSS 可以通过 “继承”
- 和 “覆写” 的形式来实现样式复用。
+ 和 “覆写” 的形式来实现样式复用。Android 中也有类似于 JavaScript 生成 HTML 的方式，自定义模板。
 
-而在 Android 的布局上，这就不是一样容易的事。
+当我们使用 React 编写组件的时候，可以传递对应的属性到组件中，这个属性可以是函数、值、组件等等。
+
+```javascript
+MyComponent.propTypes = {
+  optionalArray: PropTypes.array,
+  optionalBool: PropTypes.bool,
+  optionalFunc: PropTypes.func,
+  optionalElement: PropTypes.element
+}
+```
+
+而在 Android 的布局上，这就不是一样容易的事。为了复用样式，需要抽取成 UI 组件，还只能是 UI 上的组件。只能实现 HTML + CSS 上的复用。
+
+HTML + CSS 在编写 UI 的时候，有各种奇技淫巧，比如说样式的优先级，或者 ``important``。
 
 ### 双向绑定
 
-从原生的角度来看，前端的 ``document.getElementById()`` 与 Android 的 ``findViewById`` 并没有多大的区别。
+从原生的角度来看，前端的 ``document.getElementById()`` 与 Android 的 ``findViewById`` 并没有多大的区别。而当前端有了前端框架之后，就不一样了。好在 Android 有 ButterKnife 这样的 View 注入框架。
 
-不过 Android 是自带了双向的 DataBinding，而原生的前端是没有的。只是前端有前端框架，在这一点也完全不是问题。
+与此同时，Android 还自带了双向的 DataBinding，而原生的前端是没有的。
+
+只是前端有前端框架，在这一点也完全问题也不多。
 
 ### 布局调试
 
-而当前端有了前端框架之后，就不一样了。好在 Android 有 ButterKnife 这样的 View 注入框架。
+还好，已经有写 React Native 布局的一些经验，在写起 Android 的布局，倒也还好——没有那么坑。
+
+在布局调试上，还是前端用浏览器调式方便——还可以在浏览器实时修改 DOM 结构。Android 也有这样的工具，叫**Layout Inspector**：
 
 ![Layout Inspector](layout_inspector.png)
 
-Android 中也有类似于 JavaScript 生成 HTML 的方式，自定义模板。
+除此，还可以通过 Facebook 家的 stetho 做与 Web 相关的调试工作：
 
-过去，前端在 DOM 操作上存在天然的问题，即在我们使用 ``$("*")`` 的时候，全局。当然现今的框架，在这个问题上比较少，但是考虑到仍然可能会被误用，或者注入。
+![Stetho 调试示例](stetho-view-hierarchy.png)
 
-而 Android 则是局部页面的。
+总的来说，还算是不错的。就是这个结构，看上去和 React Native 怎么那么样呢？
 
-调试
+代码调试
 ---
 
-记得我们在 Chrome 浏览器里可以打断点，随后在 Console 中做出一些计算。
+在代码调试上来说，Java 底子厚，总的来说会比 JavaScript 好一些。
 
-得益于 Android Studio 背后的 JetBrain 的 Evaluating Expressions，可以实时计算表达式的值。
+![Android 调试](android-debug.png)
 
-以我有限的 Objective-C 编程经验来说，XCode 也是可以做到的。
+除此，记得我们在 Chrome 浏览器里可以打断点，随后在 Console 中做出一些计算。而得益于 Android Studio 背后的 JetBrain 的 Evaluating Expressions，可以实时计算表达式的值，Android 上的代码调试也是很容易的。
 
-通过 stetho 也可以做与 Web 相关的调试工作：
+![Evaluating Expressions](evaluate-example.png)
 
-![](stetho-view-hierarchy.png)
+而以我有限的 Objective-C 编程经验来说，XCode 也是可以做到的。
 
-又比如网络上的：
+### 网络调试
 
-![](stetho-inspector-network.png)
+在 Chrome 浏览器里，自带的 NetWorks 几乎是万能的。Android 方面也可以借助于 ``Stetho`` 来使用：
 
-但是依赖上比较大，我还是更习惯 Charles。
+![Stetho 网络调试](stetho-inspector-network.png)
 
-HTML + CSS 在编写 UI 的时候，有各种奇技淫巧，比如说样式的优先级
+但是依赖上比较大，需要在页面上注入，并且调试不了插件化的应用。要调试网络吧，还是 Charles 好用一些。
 
-每个 Activity（页面）都是
+可是，万一开发环境 HTTPS 了呢，不就更麻烦了。
 
 兼容性
 ---
 
-前端要调试不同的浏览器
+前端面临的是调试不同的浏览器，又或者是兼容 IE。总的来说，问题都不大——不会面临闪退的问题。即使出了点小问题，用户可以先换个浏览器试试。而当你的 Androdi 应用在用户的手机上闪退了，那么用户只能换个 APP 了。
 
-Android 则是面临碎片化的系统，不同的版本，及不同的屏幕大小，总的来说，要对前端复杂得多。
+除此，Android 则是面临碎片化的系统，不同的版本，及不同的屏幕大小，总的来说，要对前端复杂得多。
 
-最后，又难免回到了 Android 系统的一些机制。这一点与我们讨论的各种浏览器特性是相似的
+结论
+---
 
-最典型的例子就是生命周期，在编写应用的过程中，得时时刻刻关注着生命周期上的变化。这一点和 React、Vue 都是蛮相似的。
+Web 开发大法好。
 
