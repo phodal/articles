@@ -22,7 +22,7 @@
 
 （PS：受限于我只有短暂的经验，所以有些用词可能没有那么准确。）
 
-``注``：这里的**前端应用指的特指单页面应用**。
+``注``：这里的**前端应用特指单页面应用**。
 
 
 编码效率 vs 可维护度
@@ -30,7 +30,7 @@
 
 因为从运行效率上来说，原生应用必须远远大于 WebView——毕竟 WebView 的背后还是原生应用，直接等于中间多了一个层级。所以，在这里直接讨论编码效率。
 
-![Web](web.png)
+![Web](http://articles.phodal.com/mobile-vs-fe/web.png)
 
 从编码效率上来说，还是前端快，快得不止一点点。
 
@@ -42,11 +42,11 @@
 
 而考虑到 Android 和 iOS 是各自实现的，那么一个混合应用的开发效率可能是远远大于 2 倍，而跨平台应用（如 React Native、Weex、NativeScript） 的开发效率会接近他们的 2 倍（原因是：集成某些功能时，需要原生代码来实现，这时工作量直接翻倍等同）。
 
-![Android](android.png)
+![Android](http://articles.phodal.com/mobile-vs-fe/android.png)
 
 从目前的维护程度上来说，还是 Java 的代码相对维护。主要是前端领域的变化太快了，并且在软件工程上的实践不像 Java 是必需要求的，因此容易出现大量的遗留代码。只是考虑到，Java 代码的臃肿，还是改用 Kotlin 吧。
 
-![Android Studio 转 Kotlin](to-kotlin.png)
+![Android Studio 转 Kotlin](http://articles.phodal.com/mobile-vs-fe/to-kotlin.png)
 
 只需要按下： **Command + Alt + Shift + K**，轻松当爸爸。
 
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
 而当我开发 Android 应用的时候，每次我想试着在手机上查看效果的时候，得构建、编译代码、安装，大概得等上个两三钟才能运行在虚拟机或者真机上。
 
-![Android Studio Process](android-build-process.png)
+![Android Studio Process](http://articles.phodal.com/mobile-vs-fe/android-build-process.png)
 
 可事件往往不会这么顺利，动不动会遇上个 ``NullPointerException``，然后应用就 Crash 了。这个时候，就要去修复代码中的问题，加个 ``blabla!=null``，然后编译，继续 Crash。
 
@@ -142,7 +142,7 @@ public void setName(String name) {
 
 好在，由于 Android Studio 有强大的、良好的 Intellij 支持。在 IDE 上对语言的支持，要比 JavaScript 的**第三方库**支持友好得多：
 
-![静态语言](static-language.png)
+![静态语言](http://articles.phodal.com/mobile-vs-fe/static-language.png)
 
 要知道 WebStorm 或者 Intellj IDEA 专业版，它们在 JavaScript 第三方类的支持上就是坑。
 
@@ -185,11 +185,11 @@ HTML + CSS 在编写 UI 的时候，有各种奇技淫巧，比如说样式的�
 
 在布局调试上，还是前端用浏览器调式方便——还可以在浏览器实时修改 DOM 结构。Android 也有这样的工具，叫**Layout Inspector**：
 
-![Layout Inspector](layout_inspector.png)
+![Layout Inspector](http://articles.phodal.com/mobile-vs-fe/layout_inspector.png)
 
 除此，还可以通过 Facebook 家的 stetho 做与 Web 相关的调试工作：
 
-![Stetho 调试示例](stetho-view-hierarchy.png)
+![Stetho 调试示例](http://articles.phodal.com/mobile-vs-fe/stetho-view-hierarchy.png)
 
 总的来说，还算是不错的。就是这个结构，看上去和 React Native 怎么那么样呢？
 
@@ -198,11 +198,11 @@ HTML + CSS 在编写 UI 的时候，有各种奇技淫巧，比如说样式的�
 
 在代码调试上来说，Java 底子厚，总的来说会比 JavaScript 好一些。
 
-![Android 调试](android-debug.png)
+![Android 调试](http://articles.phodal.com/mobile-vs-fe/android-debug.png)
 
 除此，记得我们在 Chrome 浏览器里可以打断点，随后在 Console 中做出一些计算。而得益于 Android Studio 背后的 JetBrain 的 Evaluating Expressions，可以实时计算表达式的值，Android 上的代码调试也是很容易的。
 
-![Evaluating Expressions](evaluate-example.png)
+![Evaluating Expressions](http://articles.phodal.com/mobile-vs-fe/evaluate-example.png)
 
 而以我有限的 Objective-C 编程经验来说，XCode 也是可以做到的。
 
@@ -210,7 +210,7 @@ HTML + CSS 在编写 UI 的时候，有各种奇技淫巧，比如说样式的�
 
 在 Chrome 浏览器里，自带的 NetWorks 几乎是万能的。Android 方面也可以借助于 ``Stetho`` 来使用：
 
-![Stetho 网络调试](stetho-inspector-network.png)
+![Stetho 网络调试](http://articles.phodal.com/mobile-vs-fe/stetho-inspector-network.png)
 
 但是依赖上比较大，需要在页面上注入，并且调试不了插件化的应用。要调试网络吧，还是 Charles 好用一些。
 
