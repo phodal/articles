@@ -289,14 +289,8 @@ react-native link
 
 接下来，就是对上面做的内容进行一系列的自动化。如自动化文档、自动化 CHANGELOG、持续集成 等等。
 
-### 自动化文档
 
-
-
-
-如果是在 GitHub Travis CI 
-
-### 自动化发布
+### 自动化 CHANGELOG
 
 可以按 GitHub 上的 [Conventional Changelog](https://github.com/conventional-changelog/conventional-changelog) 来编写自己的提交信息：
 
@@ -312,8 +306,27 @@ react-native link
 
 ![提交信息示例](commit-message-example.png)
 
+### 自动化 RELEASE
+
+当我们添加了一个新功能，或者修复一个 BUG 的时候。考虑到用户的需要，我们就会发布这个新版本，一般来说，我们可能要这么做：
+
+ - 使用 ``git tag`` 提交一个新的版本
+ - 修改 CHANGELOG 来增加更新的功能
+ - 更新文档来通知用户
+ - 等等
+
+这些都应该可以自动化，如我使用的 TypeScript 模板，就可以执行 release 来发布下一个版本。
+
+```
+"release": "yarn reset && yarn test && yarn docs:publish && yarn changelog",
+```
+
 9.接受反馈
 ---
+
+开源是一种社区行为，当用户看到我们的源码写得不好、出现 BUG、新增需求等等。就会在 GitHub 提交一些反馈，又或者是 PULL Request。
+
+作为我们的用户，我们应该对他们做出即时地**响应**。但是不是一味着同意用户的需求，应该有一个清晰地 Roadmap，根据自己的时间来安排是否要开发。
 
 如果用户提了一个可怕的需求，那么
 
@@ -322,27 +335,14 @@ react-native link
  - 不做，这个需求还需要验证
  - blablabla
 
-总之，在看到的时候，尽可能早地去回复 。
-
-### Pull Request
-
-### Issues
+不管结果如何，在看到反馈的时候，尽可能早地去回复用户。
 
 10.marketing
 ---
 
+GitHub 不是
+
 一般来说，如果已经有了对比的框架，会写一个对比的报告。考虑到，每个框架都会各自有优势，只是优势的大和小，决定了用户量。如框架  A 容易上手，框架 B 设计思想好，那么显然框架 A 的优势更大。这样的对比可以放在 README 中，但是不提倡放在文档中。
-
-不要撕逼 
-
-### 文档
-
-### 博客
-
-### 会议
-
-### 社交媒体
-
 
 [^github]: 粉丝数按``location:china``搜索、提交数根据[http://git.io/top](http://git.io/top)计算得出、star数按[https://gitstar-ranking.com/users](https://gitstar-ranking.com/users)计算得出。
 
