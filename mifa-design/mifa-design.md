@@ -21,6 +21,35 @@ Mifa 之所以称为 Mifa Design，只是因为它的缩写是 MD。并不是为
 
 （PS：Logo 有待改进进进进进进进进进进进进进进进）
 
+Show Case
+---
+
+### Mifa CSS 框架
+
+![Mifa CSS 框架](mifa-css.jpeg)
+
+食用方式：
+
+从 [https://github.com/phodal/mifa](https://github.com/phodal/mifa) 的 dist 目录，下载 mifa.css 文件，再引入项目中即可。
+
+### Mifa GitHub Pages 主题
+
+![Mifa 主题](mifa-themes.jpeg)
+
+只需要在项目中创建 ``_config.yml`` 文化，在文件中写入：
+
+```
+remote_theme: phodal/mifa-jekyll
+```
+
+就可以为你的 README 启动 Mifa 主题。
+
+### Mifa 微信公号编辑器
+
+![Mifa 微信公号编辑器](mifa-markdown.jpeg)
+
+打开 [md.phodal.com](md.phodal.com) 即可使用
+
 缘由
 ---
 
