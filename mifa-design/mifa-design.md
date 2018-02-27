@@ -13,11 +13,11 @@ Ant Design 是一个服务于企业级产品的设计体系。基于『确定』
 
 我已经编不下去了，就三个字母
 
-![PWD](pwd.png)
+![PWD](http://articles.phodal.com/mifa-design/pwd.png)
 
 Mifa 之所以称为 Mifa Design，只是因为它的缩写是 MD。并不是为了和 Ant Design 齐名，只是用于为我的网站、博客、APP、小程序等等，提供一个一致化的 UI 及阅读体验。
 
-![Mifa Logo](mifa-banner.png)
+![Mifa Logo](http://articles.phodal.com/mifa-design/mifa-banner.png)
 
 （PS：Logo 有待改进进进进进进进进进进进进进进进）
 
@@ -26,7 +26,7 @@ Show Case
 
 ### Mifa CSS 框架
 
-![Mifa CSS 框架](mifa-css.jpeg)
+![Mifa CSS 框架](http://articles.phodal.com/mifa-design/mifa-css.jpeg)
 
 食用方式：
 
@@ -34,7 +34,7 @@ Show Case
 
 ### Mifa GitHub Pages 主题
 
-![Mifa 主题](mifa-themes.jpeg)
+![Mifa 主题](http://articles.phodal.com/mifa-design/mifa-themes.jpeg)
 
 只需要在项目中创建 ``_config.yml`` 文化，在文件中写入：
 
@@ -46,7 +46,7 @@ remote_theme: phodal/mifa-jekyll
 
 ### Mifa 微信公号编辑器
 
-![Mifa 微信公号编辑器](mifa-markdown.jpeg)
+![Mifa 微信公号编辑器](http://articles.phodal.com/mifa-design/mifa-markdown.jpeg)
 
 打开 [md.phodal.com](md.phodal.com) 即可使用
 
@@ -67,11 +67,11 @@ remote_theme: phodal/mifa-jekyll
 
 因为这些地方多数都是 Markdown 编写的，并且共同组成了一个设计体系。因此，名称就由 Mifa Framework 变成了 Mifa Design。Design 出自于之前项目上 UX 分享的 Design System 的 session：
 
-![设计系统](design-system-in-system.png)
+![设计系统](http://articles.phodal.com/mifa-design/design-system-in-system.png)
 
 因为，他们解决的是同一个问题，一致性。Design System 要解决的是一定规模公司中的 UI 设计问题，Mifa Design 则是为了提供一致化的阅读体验。
 
-![Mifa Design](mifa-design.jpg)
+![Mifa Design](http://articles.phodal.com/mifa-design/mifa-design.jpg)
 
 考虑到原子设计是一个不错的处理流程，接下来的内容就以原子设计来展开。
 
@@ -105,11 +105,11 @@ remote_theme: phodal/mifa-jekyll
 
 在 UI 设计中，分子是由几个基本的 HTML 标签组成的简单组织。例如，在一个搜索元素中，它是由标签原子、输入原子和搜索原子组成：
 
-![搜索元素](search-demo.png)
+![搜索元素](http://articles.phodal.com/mifa-design/search-demo.png)
 
 又比如语法高亮，则是要基本的 ``code`` 标签，加上一系列的 HTML 元素组成：
 
-![Code Highlight](code-highlight.png)
+![Code Highlight](http://articles.phodal.com/mifa-design/code-highlight.png)
 
 他们是一系列的可复用组件，可以组成更强大的有机体
 
@@ -120,11 +120,11 @@ remote_theme: phodal/mifa-jekyll
 
 它用于创建一些独立、可复用的内容，诸如 header：
 
-![Mifa Header](mifa-header.png)
+![Mifa Header](http://articles.phodal.com/mifa-design/mifa-header.png)
 
 又比如 footer：
 
-![Mifa Footer](mifa-footer.png)
+![Mifa Footer](http://articles.phodal.com/mifa-design/mifa-footer.png)
 
 这是界面中，相对复杂的不同区块。
 
@@ -135,7 +135,7 @@ remote_theme: phodal/mifa-jekyll
 
 诸如一个博客包含了 header、footer 及博客本身的内部：
 
-![Template](template-example.jpg)
+![Template](http://articles.phodal.com/mifa-design/template-example.jpg)
 
 诸如基于 Mifa 的 GitHub Pages Jekyll 主题也是模板，只需要：
 
@@ -153,3 +153,6 @@ remote_theme: phodal/mifa-jekyll
 ---
 
 So，本文自豪地采用 Mifa Design 0.1.0 排版。
+
+代码：https://github.com/phodal/mifa
+
